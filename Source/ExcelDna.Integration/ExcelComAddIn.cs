@@ -150,6 +150,8 @@ namespace ExcelDna.Integration
             }
             catch (Exception ex)
             {
+                Logger.ComAddIn.Error("LoadComAddIn exception: {0}", ex.ToString());
+
                 // If Excel is running with the /K switch it seems to indicate we're running 
                 // in a COM-unfriendly mode where (sometimes) the COM add-in for the ribbon won't load. 
                 // We skip the log display in this case.
@@ -158,7 +160,6 @@ namespace ExcelDna.Integration
                 {
                     Logger.ComAddIn.Error("The Ribbon/COM add-in helper required by add-in {0} could not be registered.\r\nThis is an unexpected error.", DnaLibrary.CurrentLibrary.Name);
                 }
-                Logger.ComAddIn.Warn("LoadComAddIn exception: {0} with /K in CommandLine", ex.ToString());
             }
         }
 
