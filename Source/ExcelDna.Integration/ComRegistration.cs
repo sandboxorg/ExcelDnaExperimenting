@@ -9,6 +9,7 @@ using Microsoft.Win32;
 using ExcelDna.Integration;
 using ExcelDna.Integration.Extensibility;
 using ExcelDna.Integration.Rtd;
+using ExcelDna.Integration.Utils;
 
 using CLSID     = System.Guid;
 using DWORD     = System.Int32;
@@ -156,7 +157,8 @@ namespace ExcelDna.ComInterop.ComRegistration
                     // 3/22/2016: We use the intended hard coded reference of the HKCU hive to address the issue: https://groups.google.com/forum/#!topic/exceldna/CF_aNXTmV2Y
                     _rootKey = CanWriteMachineHive() ?
                                 Registry.ClassesRoot :
-                                Registry.Users.CreateSubKey(WindowsIdentity.GetCurrent().User.ToString() + @"_CLASSES", RegistryKeyPermissionCheck.ReadWriteSubTree);                }
+                                RegistryHelper.CreateVolatileSubKey(Registry.Users, WindowsIdentity.GetCurrent().User + @"_CLASSES", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                }
                 return _rootKey;
             }
         }
@@ -170,7 +172,7 @@ namespace ExcelDna.ComInterop.ComRegistration
             const string testKeyName = "_ExcelDna.PermissionsTest";
             try
             {
-                RegistryKey testKey = Registry.ClassesRoot.CreateSubKey(testKeyName, RegistryKeyPermissionCheck.ReadWriteSubTree);
+                RegistryKey testKey = RegistryHelper.CreateVolatileSubKey(Registry.ClassesRoot, testKeyName, RegistryKeyPermissionCheck.ReadWriteSubTree);
                 if (testKey == null)
                 {
                     Logger.ComAddIn.Error("Unexpected failure in CanWriteMachineHive check");

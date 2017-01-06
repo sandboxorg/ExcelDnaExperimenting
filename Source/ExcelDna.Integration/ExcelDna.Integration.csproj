@@ -92,6 +92,7 @@
     <Compile Include="ExcelRtd.cs" />
     <Compile Include="RegistrationInfo.cs" />
     <Compile Include="SourceItem.cs" />
+    <Compile Include="Utils\RegistryHelper.cs" />
     <Compile Include="XlCall.cs" />
     <Compile Include="ExcelIntegration.cs" />
   </ItemGroup>
