@@ -260,10 +260,13 @@ namespace ExcelDna.ComInterop.ComRegistration
             _progId = progId;
             // Register the ProgId as a COM Add-In in Excel.
             // 3/22/2016: We use the intended hard coded reference of the HKCU hive to address the issue: https://groups.google.com/forum/#!topic/exceldna/CF_aNXTmV2Y
-            RegistryKey rk = Registry.Users.CreateSubKey(WindowsIdentity.GetCurrent().User.ToString() + @"\Software\Microsoft\Office\Excel\Addins\" + progId, RegistryKeyPermissionCheck.ReadWriteSubTree);
-            rk.SetValue("LoadBehavior", 0, RegistryValueKind.DWord);
-            rk.SetValue("FriendlyName", friendlyName, RegistryValueKind.String);
-            rk.SetValue("Description", description, RegistryValueKind.String);
+            var keyName = WindowsIdentity.GetCurrent().User + @"\Software\Microsoft\Office\Excel\Addins\" + progId;
+            using (RegistryKey rk = Registry.Users.CreateSubKey(keyName, RegistryKeyPermissionCheck.ReadWriteSubTree))
+            {
+                rk.SetValue("LoadBehavior", 0, RegistryValueKind.DWord);
+                rk.SetValue("FriendlyName", friendlyName, RegistryValueKind.String);
+                rk.SetValue("Description", description, RegistryValueKind.String);
+            }
         }
 
         protected override void Deregister()
