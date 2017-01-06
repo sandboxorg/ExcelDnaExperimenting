@@ -178,6 +178,7 @@ namespace ExcelDna.Logging
         {
             try
             {
+                CustomLogging.Log(eventType, message, args);
                 TraceLogger.IntegrationTraceSource.TraceEvent(eventType, _eventId, message, args);
             }
             catch (Exception e)

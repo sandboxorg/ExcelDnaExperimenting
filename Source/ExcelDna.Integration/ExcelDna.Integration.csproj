@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="LogDisplayTraceListener.cs" />
     <Compile Include="Logging.cs" />
+    <Compile Include="Logging\CustomLogging.cs" />
     <Compile Include="MenuManager.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
