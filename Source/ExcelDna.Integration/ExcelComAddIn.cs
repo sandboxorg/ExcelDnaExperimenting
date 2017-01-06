@@ -122,11 +122,12 @@ namespace ExcelDna.Integration
 
             try
             {
-                using (new SingletonClassFactoryRegistration(addIn, clsId))
-                using (new ProgIdRegistration(progId, clsId))
-                using (new ClsIdRegistration(clsId, progId))
-                using (new ComAddInRegistration(progId, friendlyName, description))
                 {
+                    Registrations.Add(new SingletonClassFactoryRegistration(addIn, clsId));
+                    Registrations.Add(new ProgIdRegistration(progId, clsId));
+                    Registrations.Add(new ClsIdRegistration(clsId, progId));
+                    Registrations.Add(new ComAddInRegistration(progId, friendlyName, description));
+
                     excelComAddIns = appType.InvokeMember("COMAddIns", BindingFlags.GetProperty, null, app, null, ci);
                     //                            Debug.Print("Got COMAddins object: " + excelComAddIns.GetType().ToString());
                     appType.InvokeMember("Update", BindingFlags.InvokeMethod, null, excelComAddIns, null, ci);
@@ -157,7 +158,7 @@ namespace ExcelDna.Integration
                 {
                     Logger.ComAddIn.Error("The Ribbon/COM add-in helper required by add-in {0} could not be registered.\r\nThis is an unexpected error.", DnaLibrary.CurrentLibrary.Name);
                 }
-                Logger.ComAddIn.Info("LoadComAddIn exception: {0} with /K in CommandLine", ex.ToString());
+                Logger.ComAddIn.Warn("LoadComAddIn exception: {0} with /K in CommandLine", ex.ToString());
             }
         }
 
@@ -169,7 +170,16 @@ namespace ExcelDna.Integration
                 comAddIn.GetType().InvokeMember("Connect", System.Reflection.BindingFlags.SetProperty, null, comAddIn, new object[] { false }, ci);
                 Logger.ComAddIn.Info("COMAddin is unloaded.");
             }
+
+            Registrations.Reverse();
+            foreach (var registration in Registrations)
+            {
+                registration.Dispose();
+            }
+            Registrations.Clear();
         }
+
+        private static readonly List<Registration> Registrations = new List<Registration>();
     }
 
 }
