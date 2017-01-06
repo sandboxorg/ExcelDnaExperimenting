@@ -167,19 +167,19 @@ namespace ExcelDna.Logging
     // It's easier to maintain two copies for now.
     class Logger
     {
-        int _eventId;
+        IntegrationTraceEventId _eventId;
 
         Logger(IntegrationTraceEventId traceEventId)
         {
-            _eventId = (int)traceEventId;
+            _eventId = traceEventId;
         }
 
         void Log(TraceEventType eventType, string message, params object[] args)
         {
             try
             {
-                CustomLogging.Log(eventType, message, args);
-                TraceLogger.IntegrationTraceSource.TraceEvent(eventType, _eventId, message, args);
+                CustomLogging.Log(eventType, _eventId, message, args);
+                TraceLogger.IntegrationTraceSource.TraceEvent(eventType, (int)_eventId, message, args);
             }
             catch (Exception e)
             {

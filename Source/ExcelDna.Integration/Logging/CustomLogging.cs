@@ -33,13 +33,13 @@ namespace ExcelDna.Logging
             }
         }
 
-        public static void Log(TraceEventType eventType, string message, params object[] args)
+        public static void Log(TraceEventType eventType, IntegrationTraceEventId traceEventId, string message, params object[] args)
         {
             try
             {
                 EnsureInit();
 
-                var renderedMessage = string.Format(message, args);
+                var renderedMessage = traceEventId + "\t" + string.Format(message, args);
                 if (_logger != null)
                     _logger.Invoke(null, new object[] { eventType, renderedMessage });
             }
